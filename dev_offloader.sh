@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# http://mirrors.kernel.org/ubuntu/pool/restricted/b/bcmwl/bcmwl-kernel-source_6.30.223.271+bdcom-0ubuntu8_amd64.deb
+
+PACKAGE_URL="http://mirrors.kernel.org/ubuntu/pool/restricted/b/bcmwl/bcmwl-kernel-source_6.30.223.271+bdcom-0ubuntu8_amd64.deb"
 PACKAGE_NAME="bcmwl-kernel-source"
 WORK_DIR=$(pwd)
 
@@ -12,7 +15,7 @@ download_packages() {
     # sudo apt-get update
 
     # Download the specified package and all its dependencies
-    apt-get download "$PACKAGE_NAME"
+    apt-get download "$PACKAGE_URL"
     DEPENDENCIES=$(apt-cache depends "$PACKAGE_NAME" | grep -E 'Depends|Recommends' | cut -d ':' -f2 | tr -d '<>' | xargs)
     for dep in $DEPENDENCIES; do
         apt-get download "$dep"
