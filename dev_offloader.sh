@@ -1,37 +1,48 @@
 #!/bin/bash
 
-# Check if the correct number of arguments is passed
-if [ "$#" -ne 2 ]; then
-    echo "Usage:"
-    echo "Offline system: $0 --generate-signature <package-name> <directory>"
-    echo "Online system: $0 --download-packages <signature-file-path> <output-directory>"
-    exit 1
-fi
+PACKAGE_NAME="bcmwl-kernel-source"
+WORK_DIR=$(pwd)
 
-# Assign command line arguments to variables
-COMMAND=$1
-PACKAGE_OR_SIGNATURE=$2
-DIRECTORY=$3
+download_packages() {
+    # Create a temporary directory for the download process
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
 
-case $COMMAND in
-    --generate-signature)
-        # Generate signature file for the package
-        SIGNATURE_FILE="${DIRECTORY}/${PACKAGE_OR_SIGNATURE}.sig"
-        mkdir -p "${DIRECTORY}"
-        apt-offline set --install-packages "${PACKAGE_OR_SIGNATURE}" "${SIGNATURE_FILE}"
-        echo "Generated signature file at ${SIGNATURE_FILE}"
-        echo "Transfer this file to an online system and run this script with --download-packages option."
+    # Update package lists (optional, comment out if not desired)
+    # sudo apt-get update
+
+    # Download the specified package and all its dependencies
+    apt-get download "$PACKAGE_NAME"
+    DEPENDENCIES=$(apt-cache depends "$PACKAGE_NAME" | grep -E 'Depends|Recommends' | cut -d ':' -f2 | tr -d '<>' | xargs)
+    for dep in $DEPENDENCIES; do
+        apt-get download "$dep"
+    done
+
+    # Move all downloaded packages to the specified work directory
+    mv *.deb "$WORK_DIR"
+    cd "$WORK_DIR"
+    rm -rf "$TEMP_DIR"  # Clean up temporary directory
+    echo "Downloaded all packages and dependencies to $WORK_DIR"
+}
+
+install_packages() {
+    # Install all .deb packages in the work directory
+    sudo dpkg -i "$WORK_DIR"/*.deb
+    # Fix missing dependencies (if any)
+    sudo apt-get install -f
+    echo "Installation completed."
+}
+
+# Check command line argument
+case "$1" in
+    --download)
+        download_packages
         ;;
-    --download-packages)
-        # Download packages using the signature file
-        BUNDLE_FILE="${DIRECTORY}/offline-packages.zip"
-        mkdir -p "${DIRECTORY}"
-        apt-offline get "${PACKAGE_OR_SIGNATURE}" --bundle "${BUNDLE_FILE}"
-        echo "Downloaded packages are in ${BUNDLE_FILE}"
-        echo "Transfer this bundle back to the offline system for installation."
+    --install)
+        install_packages
         ;;
     *)
-        echo "Invalid command. Please use --generate-signature for offline system or --download-packages for online system."
+        echo "Usage: $0 --download | --install"
         exit 1
         ;;
 esac
