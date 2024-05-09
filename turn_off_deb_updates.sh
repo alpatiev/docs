@@ -23,3 +23,4 @@ sudo systemctl disable apt-daily-upgrade.timer
 
 # 5. Purge DigitalOcean metrics agent
 sudo apt-get purge droplet-agent*
+sudo rm /etc/apt/sources.list.d/droplet-agent.list
