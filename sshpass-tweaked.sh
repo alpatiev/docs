@@ -11,7 +11,7 @@ TARGET=""
 # 3. Now you can log in to your server with a single command.
 #
 # To download and install, use the following:
-# curl -s https://raw.githubusercontent.com/alpatiev/docs/master/sshpass-tweaked.sh | sh -s -- -i
+# curl -s -O https://raw.githubusercontent.com/alpatiev/docs/master/sshpass-tweaked.sh && bash sshpass-tweaked.sh -i
 #
 # Credits: https://alpatiev.com
 
