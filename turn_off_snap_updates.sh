@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Disable all updates in Debian/Ubuntu.
-# TODO: check another services.
-
 # 1. Disable unattended upgrades
 sudo systemctl stop unattended-upgrades
 sudo systemctl disable unattended-upgrades
