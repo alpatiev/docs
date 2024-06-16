@@ -41,3 +41,20 @@
     chmod 700 ~/.ssh
     chmod 600 ~/.ssh/authorized_keys
     ```
+
+4. `Optional` To use no password login within local network:
+
+    Copy identity to the host and update `~/.ssh/config`, assumming id localed at `~/.ssh/id_rsa`:
+    - `<name>` just any unique name
+    - `<user>` user login
+    - `<ip>` LAN ip of host
+    -
+    ```
+    ssh-copy-id -i ~/.ssh/id_rsa.pub <user>@<ip>
+    ```
+    -
+    ```
+    Host <name>
+        HostName <ip>
+        User <user>
+        IdentityFile ~/.ssh/id_rsa
