@@ -58,3 +58,9 @@
         HostName <ip>
         User <user>
         IdentityFile ~/.ssh/id_rsa
+
+5. `Optional` regenerate `id_rsa` if not exist or whatever:
+   ```
+   cd ~/.ssh
+   ssh-keygen -t rsa
+   ```
