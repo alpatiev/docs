@@ -13,19 +13,19 @@
 
     - `<port>` for custom port if needed, 
     - `<path>` for public file aka `.key.pub`
-
+    -
     ```
     ssh-copy-id -i <path> -p <port> root@ip
     ```
 
-3. Update config (`~/.ssh/config`),
+4. Update config (`~/.ssh/config`),
 
     - `<name>` just any unique name
     - `<ip>` actuall ip of host
     - `<port>` port if needed
     - `<login>` username
-    - `<path>` path for `.key` file 
-
+    - `<path>` path for `.key` file
+    - 
     ```
     Host <name>
         HostName <ip>
